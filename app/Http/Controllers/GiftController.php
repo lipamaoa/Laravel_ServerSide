@@ -9,11 +9,14 @@ use App\Models\gift;
 class GiftController extends Controller
 {
 
-    function getAllGifts()
+    function getAllGifts(){
+        $gifts = $this->getGifts();
 
-    {$gifts = $this->getGifts();
+      
+      
         return view('gifts.gifts', compact('gifts'));
-    }
+      }  
+    
     
 
     function getGifts()
@@ -22,7 +25,13 @@ class GiftController extends Controller
             ->join('users', 'gifts.user_id', '=', 'users.id')
             ->select('gifts.id', 'gifts.giftName', 'gifts.priceExpected', 'gifts.amountSpent', 'users.name as user_name')
             ->get();
+
+            foreach ($gifts as $gift) {
+                $gift->difference = $gift->priceExpected - $gift->amountSpent;
+
+                
            
+            }
         return $gifts;
     }
 
@@ -75,8 +84,7 @@ class GiftController extends Controller
     }
 
 
-    public function updateGiftForm($id)
-{
+    public function updateGiftForm($id){
     $gift = DB::table('gifts')->where('id', $id)->first();
     $usersSelection = DB::table('users')->select('id', 'name')->get();
 

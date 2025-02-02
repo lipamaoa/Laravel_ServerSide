@@ -52,7 +52,7 @@
             
 
             <div class="text-center">
-                <button type="submit" class="btn btn-primary btn-lg w-100">Add User</button>
+                <button type="submit" class="btn btn-primary btn-lg w-100">Add</button>
             </div>
         </form>
     </div>

@@ -22,9 +22,10 @@
                 <thead class="table-dark">
                     <tr> 
                         <th scope="row">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Price Expected</th>
-                        <th scope="col">Amount Spent</th>
+                        <th scope="col">Gift</th>
+                        <th scope="col">Price Expected (€)</th>
+                        <th scope="col">Amount Spent (€)</th>
+                        <th scope="col">Difference (€)</th>
                         <th scope="col">Recipient</th>
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
@@ -36,6 +37,7 @@
                         <td>{{ $gift->giftName }}</td>
                         <td>{{ $gift->priceExpected }}</td>
                         <td>{{ $gift->amountSpent }}</td>
+                        <td>{{$gift->difference}} </td>
                         <td>{{ $gift->user_name }}</td>
                         <td class="text-center">
                             <a href="{{route('gifts.id', $gift->id)}}" class="btn btn-sm btn-primary">See</a>
