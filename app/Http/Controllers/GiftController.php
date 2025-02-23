@@ -1,37 +1,37 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Models\gift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\gift;
+use Illuminate\Support\Facades\Storage;
 
 
 class GiftController extends Controller
 {
 
-    function getAllGifts(){
+    function getAllGifts()
+    {
         $gifts = $this->getGifts();
 
-      
-      
+
+
         return view('gifts.gifts', compact('gifts'));
-      }  
-    
-    
+    }
+
+
 
     function getGifts()
     {
         $gifts = DB::table('gifts')
             ->join('users', 'gifts.user_id', '=', 'users.id')
-            ->select('gifts.id', 'gifts.giftName', 'gifts.priceExpected', 'gifts.amountSpent', 'users.name as user_name')
+            ->select('gifts.id', 'gifts.giftName', 'gifts.priceExpected', 'gifts.amountSpent', 'users.name as user_name', 'gifts.photo')
             ->get();
 
-            foreach ($gifts as $gift) {
-                $gift->difference = $gift->priceExpected - $gift->amountSpent;
-
-                
-           
-            }
+        foreach ($gifts as $gift) {
+            $gift->difference = $gift->priceExpected - $gift->amountSpent;
+        }
         return $gifts;
     }
 
@@ -44,7 +44,7 @@ class GiftController extends Controller
             ->first();
 
         // dd($gift);
-       
+
         return view('gifts.gift_view', compact('gift'));
     }
 
@@ -65,8 +65,8 @@ class GiftController extends Controller
     {
         // dd($request->all());
 
-      
-      $request->validate([
+
+        $request->validate([
             'giftName' => 'required|string|min:3',
             'priceExpected' => 'required|integer',
             'amountSpent' => 'required|integer',
@@ -84,32 +84,39 @@ class GiftController extends Controller
     }
 
 
-    public function updateGiftForm($id){
-    $gift = DB::table('gifts')->where('id', $id)->first();
-    $usersSelection = DB::table('users')->select('id', 'name')->get();
+    public function updateGiftForm($id)
+    {
+        $gift = DB::table('gifts')->where('id', $id)->first();
+        $usersSelection = DB::table('users')->select('id', 'name')->get();
 
-    return view('gifts.update_gift', compact('gift', 'usersSelection'));
-}
+        return view('gifts.update_gift', compact('gift', 'usersSelection'));
+    }
 
 
 
-public function updateGift(Request $request, $id)
-{
-    $request->validate([
-        'giftName' => 'required|string|min:3',
-        'priceExpected' => 'required|integer',
-        'amountSpent' => 'required|integer',
-        'user_id' => 'required|integer',
-    ]);
+    public function updateGift(Request $request, $id)
+    {
+        $request->validate([
+            'giftName' => 'required|string|min:3',
+            'priceExpected' => 'required|integer',
+            'amountSpent' => 'required|integer',
+            'user_id' => 'required|integer',
+            'photo' => 'image'
+        ]);
 
-    DB::table('gifts')->where('id', $id)->update([
-        'giftName' => $request->giftName,
-        'priceExpected' => $request->priceExpected,
-        'amountSpent' => $request->amountSpent,
-        'user_id' => $request->user_id,
-    ]);
+        $photo = null;
+        if ($request->hasFile('photo')) {
+            $photo = Storage::putFile('giftPhotos', $request->photo);
+        }
 
-    return redirect()->route('gifts')->with('message', 'Gift updated successfully!');
-}
+        DB::table('gifts')->where('id', $id)->update([
+            'giftName' => $request->giftName,
+            'priceExpected' => $request->priceExpected,
+            'amountSpent' => $request->amountSpent,
+            'user_id' => $request->user_id,
+            'photo' => $photo
+        ]);
 
+        return redirect()->route('gifts')->with('message', 'Gift updated successfully!');
+    }
 }

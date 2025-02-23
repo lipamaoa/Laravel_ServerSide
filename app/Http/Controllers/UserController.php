@@ -14,7 +14,7 @@ class UserController extends Controller
     {
         $cesaeInfo = $this->getCesaeInfo();
         $contacts = $this->getContacts();
-        $users = $this->getAllUsersFromDB();
+       
         // dd($users);
         // $contactPerson = DB::table('users')->where('name', 'Rita')->first();
         // dd($contactPerson);
@@ -22,6 +22,19 @@ class UserController extends Controller
     //    $this->deleteUserFromDB(4);
 
         // $this->updateUserAtDB();
+
+
+        //pesquisa quando existe um campo search
+        // $search=null;
+
+        // if(request()->query('search')){
+        //     $search=request()->query('search')
+        // }else{
+        //     $search=null
+        // }
+
+        $search=request()->query('search')?request()->query('search'): null;
+        $users=$this->getAllUsersFromDB($search);
 
         return view('users.all_users', compact('cesaeInfo', 'contacts', 'users'));
     }
@@ -76,10 +89,20 @@ class UserController extends Controller
         DB::table('users')->where('id', 1)->update(['email' => 'filipa.santos@gmail.com']);
     }
 
-    public function getAllUsersFromDB()
+    public function getAllUsersFromDB($search)
     {
-        $users = DB::table('users')
-        ->get();
+        $users = DB::table('users');
+        if($search){
+            $users=$users
+            ->where("name", "LIKE", "%{$search}%")
+            ->orWhere('email', $search);
+           
+        }
+            $users=$users->select('name', 'email', 'password', 'id')
+            ->get();
+       
+
+       
 
         return $users;
     }

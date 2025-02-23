@@ -1,6 +1,10 @@
 @extends('layouts.fo_layout')
 
 @section('content')
+@auth
+            <h5>Olá {{ Auth::user()->name }}</h5>
+    @endauth
+
 <div class="container mt-4">
     <div class="card shadow-lg p-4">
         <div class="text-center">

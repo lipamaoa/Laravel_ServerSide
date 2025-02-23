@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\DB;
 class TaskController extends Controller
 {
 public function taskList(){
-    $tasks = $this->getTasks();
+    $search=request()->query('search')?request()->query('search'): null;
+    $tasks = $this->getTasks($search);
    
     $taskAvailable = $this->getTasksAvailable();
 
@@ -17,12 +18,18 @@ public function taskList(){
 }
 
 
-    public function getTasks()
-    { $tasks =
-        DB::table('tasks')
-        ->join('users', 'tasks.user_id', '=', 'users.id')
-        ->select('tasks.id', 'tasks.name', 'tasks.description', 'tasks.status', 'tasks.due_at', 'users.name as user_name')
+    public function getTasks($search)
+    { $tasks = DB::table('tasks')->join('users', 'tasks.user_id', '=', 'users.id');
+
+        if($search){
+            $tasks=$tasks
+            ->where("name", "LIKE", "%{$search}%");
+            
+        }
+
+        $tasks=$tasks->select('tasks.id', 'tasks.name', 'tasks.description', 'tasks.status', 'tasks.due_at', 'users.name as user_name')
         ->get();
+
         return $tasks;
     }
 

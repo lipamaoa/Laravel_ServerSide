@@ -11,7 +11,7 @@
 <div class="d-flex justify-content-center align-items-center vh-100">
     <div class="card p-4 shadow" style="width: 40rem;">
         <h1 class="text-center mb-4">Edit Gift</h1>
-        <form action="{{ route('gifts.update', $gift->id) }}" method="POST">
+        <form action="{{ route('gifts.update', $gift->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
            
            
@@ -47,6 +47,15 @@
             @error('user_id')
             <span style="color: red;">{{ $message }}</span>
             @enderror
+
+            <div class="mb-3">
+                <label for="photo" class="form-label">Photo</label>
+                <input type="file" accept="image/*" name="photo" class="form-control" id="photo">
+                 
+                        @error('photo')
+                <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-primary btn-lg w-100">Update Gift</button>
             </div>

@@ -23,10 +23,12 @@
                     <tr> 
                         <th scope="row">#</th>
                         <th scope="col">Gift</th>
+                        <th scope="col">Photo</th>
                         <th scope="col">Price Expected (€)</th>
                         <th scope="col">Amount Spent (€)</th>
                         <th scope="col">Difference (€)</th>
                         <th scope="col">Recipient</th>
+
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -34,6 +36,7 @@
                     @foreach ($gifts as $gift)
                     <tr>
                         <th scope="row">{{$gift->id}}</th>
+                        <td><img src="{{$gift->photo?asset('storage/'.$gift->photo):asset('images/No_Photo.png')}}"/></td>
                         <td>{{ $gift->giftName }}</td>
                         <td>{{ $gift->priceExpected }}</td>
                         <td>{{ $gift->amountSpent }}</td>

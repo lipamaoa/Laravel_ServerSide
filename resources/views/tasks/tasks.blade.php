@@ -15,6 +15,11 @@
 <div class="container mt-5">
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h1 class="text-center mb-4">Tasks</h1>
+
+    <form action="">
+        <input type="text" name="search" id="" value="{{request()->query('search')}}">
+        <button type="submit" class=" btn btn-primary">Search</button>
+        
     <a href="{{ route('task.add') }}" class="btn btn-primary btn-sm">Add Task</a>
 </div>
     <div class="card shadow">
